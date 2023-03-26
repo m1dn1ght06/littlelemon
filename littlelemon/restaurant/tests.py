@@ -15,8 +15,8 @@ class MenuTest(TestCase):
 class MenuViewTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.menu_item1 = Menu.objects.create(Title='steak', Price=12.0, Inventory=3)
-        self.menu_item2 = Menu.objects.create(Title='salad', Price=8.0, Inventory=5)
+        self.menu_item1 = Menu.objects.create(Title='steak', Price=12.00, Inventory=3)
+        self.menu_item2 = Menu.objects.create(Title='salad', Price=8.00, Inventory=5)
 
     def test_getall(self):
         response = self.client.get(reverse('MenuItemsView'))
@@ -24,6 +24,9 @@ class MenuViewTest(TestCase):
 
         # Deserialize the response content
         data = json.loads(response.content)
+        for item in data:
+            item['Price'] = float(item['Price'])
+            item['Inventory'] = float(item['Inventory'])
 
         # Check that the serialized data matches the expected data
         self.assertEqual(len(data), 2)
